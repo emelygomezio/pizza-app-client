@@ -8,8 +8,18 @@ const UserProfilePage = () => {
     if (isGetLoading) {
         return <span> Loading...</span>;
     }
+
+    if(!currentUser) {
+        return <span> Unable to load user profile </span>;
+    }
     
-    return <UserProfileForm onSave={updateUser} isLoading={isUpdateLoading} />;
+    return (
+      <UserProfileForm
+        currentUser={currentUser}
+        onSave={updateUser}
+        isLoading={isUpdateLoading}
+      />
+    );
 };
  
 export default UserProfilePage;
