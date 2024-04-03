@@ -5,6 +5,10 @@ import DetailsSection from "./DetailsSection";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import CuisinesSection from "./CuisinesSection";
+import MenuSection from "./MenuSection";
+import ImageSection from "./ImageSection";
+import LoadingButton from "@/components/LoadingButton";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
     restaurantName: z.string({
@@ -52,9 +56,37 @@ const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
     });
 
     const onSubmit = (formDataJson: RestaurantFormData) => {
-        // TODO - convert formDataJson to a new FormData object
+        // convert formDataJson to a new FormData object
+        const formData = new FormData();
 
-    };
+        formData.append("restaurantName", formDataJson.restaurantName);
+        formData.append("city", formDataJson.city);
+        formData.append("country", formDataJson.country);
+
+        formData.append(
+            "deliveryPrice", 
+            (formDataJson.deliveryPrice * 100).toString()
+        );
+
+        formData.append(
+            "estimatedDeliveryTime", 
+            formDataJson.estimatedDeliveryTime.toString()
+        );
+        formDataJson.cuisines.forEach((cuisine, index) => {
+            formData.append(`cuisines[${ index }]`, cuisine);
+        });
+        formDataJson.menuItems.forEach((menuItem, index) => {
+            formData.append(`menuItems[${index}][name]`, menuItem.name)
+            formData.append(
+                `menuItems[${index}][price]`, 
+                (menuItem.price * 100).toString()
+            );
+        });
+
+        formData.append(`imageFile`, formDataJson.imageFile);
+
+        onSave(formData);
+     };
 
     return (
         <Form {...form}>
@@ -65,6 +97,11 @@ const ManageRestaurantForm = ({ onSave, isLoading }: Props) => {
                 <DetailsSection />
                 <Separator />
                 <CuisinesSection />
+                <Separator />
+                <MenuSection />
+                <Separator />
+                <ImageSection />
+                {isLoading ? <LoadingButton /> : <Button type="submit"> Submit </Button>}
             </form>
         </Form>
     )
