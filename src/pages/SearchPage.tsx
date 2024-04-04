@@ -1,4 +1,5 @@
 import { useSearchRestaurants } from "@/api/RestaurantApi";
+import CuisineFilter from "@/components/CuisineFilter";
 import PaginationSelector from "@/components/PaginationSelector";
 import SearchBar, { SearchForm } from "@/components/SearchBar";
 import SearchResultCard from "@/components/SearchResultCard";
@@ -11,6 +12,7 @@ import { useParams } from "react-router-dom";
 export type SearchState = {
     searchQuery: string;
     page: number;
+    selectedCuisines: string[];
 }
 
 const SearchPage = () => {
@@ -18,10 +20,18 @@ const SearchPage = () => {
  const [ searchState, setSearchState ] = useState<SearchState> ({
     searchQuery: "",
     page: 1,
+    selectedCuisines: [],
  });
  
  const { results, isLoading } = useSearchRestaurants(searchState, city);
 
+ const setSelectedCuisines = (selectedCuisines: string[]) => {
+    setSearchState((prevState) => ({
+        ...prevState,
+        selectedCuisines,
+        page: 1,
+    }));
+ };
 
  const setPage = (page: number) => {
     setSearchState((prevState) => ({
@@ -57,7 +67,10 @@ const SearchPage = () => {
  return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
         <div id="cuisines-list">
-            Insert cuisines here: 
+            <CuisineFilter 
+                selectedCuisines={searchState.selectedCuisines}
+                onChange={setSelectedCuisines}
+            />
         </div>
         <div id="main-content" className="flex flex-col gap-5">
             <SearchBar 
@@ -66,7 +79,10 @@ const SearchPage = () => {
                 placeHolder="Search by Cuisine or Restaurant Name"
                 onReset={resetSearch}
             />
-            <SearchResultInfo total={results.pagination.total} city={city}/> 
+            <div className="flex justify-between flex-col gap-3 lg:flex-row">
+                <SearchResultInfo total={results.pagination.total} city={city}/> 
+            </div>
+
             {results.data.map((restaurant) => (
                 <SearchResultCard restaurant={restaurant} />
             ))}
