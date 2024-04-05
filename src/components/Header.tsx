@@ -11,7 +11,7 @@ const Header = () => {
                 to='/'
                 className="text-3xl font-bold tracking-tight text-red-500"
                 >
-                <img src={Toppings} className="h-12" alt="Logo"/>
+                <img src={Toppings} className="h-14" alt="Logo"/>
             </Link>
             <div className="md:hidden">
                 <MobileNav /> 
