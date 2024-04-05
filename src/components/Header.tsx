@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import MobileNav from "./MobileNav";
 import MainNav from "./MainNav";
+import Toppings from "../assets/toppings.png";
 
 const Header = () => {
  return(
@@ -10,7 +11,7 @@ const Header = () => {
                 to='/'
                 className="text-3xl font-bold tracking-tight text-red-500"
                 >
-                Toppings.com
+                <img src={Toppings} className="h-12" alt="Logo"/>
             </Link>
             <div className="md:hidden">
                 <MobileNav /> 
